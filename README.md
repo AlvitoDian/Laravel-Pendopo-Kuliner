@@ -31,7 +31,7 @@ If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Lar
 ## Pendopo Kuliner
 
 <p align="center">
-<img src="public/images/gameku2.png" alt="Total Downloads" width="300px">
+
 </p>
 
 ## Description
