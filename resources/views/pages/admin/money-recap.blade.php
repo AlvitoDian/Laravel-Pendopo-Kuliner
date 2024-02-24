@@ -109,7 +109,7 @@
                             <canvas id="myAreaChart"></canvas>
                         </div>
                         <hr>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum, nostrum?
+                        Rekapitulasi Pemasukan Setiap Bulan.
                     </div>
                 </div>
 
@@ -396,6 +396,8 @@
                             },
                             ticks: {
                                 maxTicksLimit: 7,
+                                autoSkip: false, 
+                                maxRotation: 0
                             },
                         }, ],
                         yAxes: [{

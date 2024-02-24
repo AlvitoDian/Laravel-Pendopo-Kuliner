@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,8 +27,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        //? Global Formatting Money
         Blade::directive('money', function ($money) {
             return "Rp. <?php echo number_format($money, 0,',','.'); ?>";
+        }); 
+
+        //? Global Variable Cart
+        view()->composer('*',function($view) {
+            $userId = Auth::user()->id;
+            $view->with('cartItems', Cart::where('users_id', $userId)->count());
         });
+
+
+           
+        
+        
     }
 }
