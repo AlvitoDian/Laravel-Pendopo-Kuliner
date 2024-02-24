@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Exports\ExportRevenue;
 use App\Models\TransactionDetail;
 use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class DashboardRevenueRecap extends Controller
 {
@@ -23,11 +24,22 @@ class DashboardRevenueRecap extends Controller
             ->count();
         $doneTransaction = Transaction::where('transaction_status', 'DONE')->count();
         $totalUser = User::where('roles', 'USER')->count();
+
+        $monthlyRevenues = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $revenue = Transaction::where('transaction_status', 'DONE')->whereMonth('created_at', $month)->sum('total_price');
+
+            $monthlyRevenues[$month] = $revenue;
+        }
+      /*   dd($monthlyRevenues); */
+
         return view('pages.admin.money-recap', [
             'totalRevenue' => $totalRevenue,
             'stuffSoild' => $stuffSold,
             'doneTransaction' => $doneTransaction,
             'totalUser' => $totalUser,
+            'monthlyRevenues' => $monthlyRevenues,
         ]);
     }
 
