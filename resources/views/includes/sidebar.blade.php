@@ -135,7 +135,7 @@
                    <i class="fas fa-fw fa-user"></i>
                    <span>Daftar User</span></a>
            </li>
-       @endcan
+       @endcan 
 
        <!-- Divider -->
        <hr class="sidebar-divider d-none d-md-block">

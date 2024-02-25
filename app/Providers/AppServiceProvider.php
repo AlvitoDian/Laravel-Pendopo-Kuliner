@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Cart;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
@@ -44,8 +46,11 @@ class AppServiceProvider extends ServiceProvider
     });
 
         //? Gate Authorization isAdmin
-        Gate::define('isAdmin', function ($user) {
-        return $user->hasRole('admin');
+        Gate::define('isAdmin', function (User $user) {
+        return $user->hasRole('ADMIN')
+                    ? Response::allow()
+                    : Response::denyWithStatus(404);
     });
+
     }
 }
