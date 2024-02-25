@@ -35,14 +35,12 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="row">
-                                                    <div class="col-lg-2 col-md-6">
+                                                    {{-- <div class="col-lg-2 col-md-6">
                                                         <div style="width: 100%; height: 150px; overflow: hidden;">
                                                             @php
                                                                 $getTransactionDetail = \App\Models\TransactionDetail::with('product')
                                                                     ->where('transactions_id', $transaction->id)
                                                                     ->first();
-
-                                                                // Check if $getTransactionDetail is not null before accessing its properties
                                                                 if ($getTransactionDetail) {
                                                                     $imageFirst = $getTransactionDetail->product->image;
                                                             @endphp
@@ -51,12 +49,11 @@
                                                                 style="width: 100%; height: 100%; object-fit: contain; border-radius: 14px;">
 
                                                             @php
-                                                                // Close the if statement
                                                                 }
                                                             @endphp
                                                         </div>
-                                                    </div>
-                                                    <div class="col-lg-10 col-md-6">
+                                                    </div> --}}
+                                                    <div class="col-lg-12 col-md-6">
                                                         <p>
                                                             <span style="font-weight: 700">Nama :
                                                             </span>{{ $transaction->user->name }}
@@ -70,8 +67,8 @@
                                                             </span>
                                                         </p>
                                                         <p>
-                                                            <span style="font-weight: 700">Tanggal :
-                                                            </span>{{ $transaction->created_at }}
+                                                            <span style="font-weight: 700">Waktu Pembelian :
+                                                            </span>{{ $transaction->created_at->diffForHumans()  }}
                                                         </p>
                                                         <p>
                                                             <span style="font-weight: 700">Harga :
@@ -94,33 +91,11 @@
                                                 </a>
                                             </div>
                                         </div>
-                                        {{--   <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-1">
-                                                        {{ $transaction->code }}
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        {{ $transaction->user->name }}
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        {{ $transaction->created_at }}
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        {{ $transaction->transaction_status }}
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        @money($transaction->total_price)
-                                                    </div>
-                                                    <div class="col-md-1 d-none d-md-block">
-                                                        <img src="/images/dashboard-arrow-right.svg" alt="" />
-                                                    </div>
-                                                </div>
-                                            </div> --}}
-                                        {{--   </a> --}}
+                                       
                                     @else
-                                        {{-- <div class="card-body">
-                          <p>Tidak ada transaksi</p>
-                        </div> --}}
+                                      {{--   <div class="card-body">
+                                          <p>Tidak ada transaksi</p>
+                                        </div> --}}
                                     @endif
                                 @endforeach
                             </div>
