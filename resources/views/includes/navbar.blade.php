@@ -164,7 +164,7 @@
             <a class="nav-link dropdown-toggle" href="{{ route('cart') }}">
                 <i class="fas fa-shopping-cart fa-fw"></i>
                 <!-- Counter - Messages -->
-                <span class="badge badge-danger badge-counter">{{ $cartItems }}</span>
+                <span class="badge badge-danger badge-counter">{{ $cartItems ?? '' }}</span>
             </a>
         </li>
 

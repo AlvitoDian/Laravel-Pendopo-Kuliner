@@ -100,7 +100,7 @@
            </li>
        @endif
 
-       @if (auth()->user()->hasRole('ADMIN'))
+       @can('isAdmin')
            <!-- Heading -->
            <div class="sidebar-heading">
                Kelola Barang
@@ -135,7 +135,7 @@
                    <i class="fas fa-fw fa-user"></i>
                    <span>Daftar User</span></a>
            </li>
-       @endif
+       @endcan
 
        <!-- Divider -->
        <hr class="sidebar-divider d-none d-md-block">

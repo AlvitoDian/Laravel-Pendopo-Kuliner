@@ -39,7 +39,7 @@ Route::post('/register', [RegisterController::class, 'store']);
 
 Route::post('/logout', [LoginController::class, 'logout']);
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', /* 'admin' */'can:isAdmin'])->group(function () {
     Route::get('/revenue', [DashboardRevenueRecap::class, 'index'])->name('revenue');
 
     Route::get('/revenue/export-excel', [DashboardRevenueRecap::class, 'export_excel'])->name('revenue-export');
