@@ -19,52 +19,48 @@ class TransactionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    { 
-       $transactions = Transaction::with('user')
-        ->where('users_id', Auth::user()->id)
-        ->get();
+    {
+        $transactions = Transaction::with('user')
+            ->where('users_id', Auth::user()->id)
+            ->get();
 
-        return view('pages.user.transaction.index',[
-            'transactions' => $transactions
+        return view('pages.user.transaction.index', [
+            'transactions' => $transactions,
         ]);
     }
-    
-    public function indexAdmin()
-    { 
-      
-       $transactions = Transaction::with('user')
-        ->get();
 
-        return view('pages.transaction-admin.transaction',[
-            'transactions' => $transactions
+    public function indexAdmin()
+    {
+        $transactions = Transaction::with('user')->get();
+
+        return view('pages.transaction-admin.transaction', [
+            'transactions' => $transactions,
         ]);
     }
 
     public function details(Request $request, $id)
-    {   
-        $transactionProducts = TransactionDetail::with(['transaction.user','product'])
+    {
+        $transactionProducts = TransactionDetail::with(['transaction.user', 'product'])
             ->where('transactions_id', $id)
             ->get();
-        $transactions = Transaction::with('user')
-        ->where('id', $id)->first();
-            /* dd($transactions); */
-         return view('pages.user.transaction.details', [
-        'transactionProducts' => $transactionProducts,
-        'transactions' => $transactions
-    ]);  
+        $transactions = Transaction::with('user')->where('id', $id)->first();
+        /* dd($transactions); */
+        return view('pages.user.transaction.details', [
+            'transactionProducts' => $transactionProducts,
+            'transactions' => $transactions,
+        ]);
     }
-    
+
     public function detailProducts(Request $request, $id)
-    {   
-        $productTransDetails = TransactionDetail::with(['transaction.user','product'])
+    {
+        $productTransDetails = TransactionDetail::with(['transaction.user', 'product'])
             ->where('id', $id)
             ->first();
-           /*  dd($productTransDetails); */
-         return view('pages.user.transaction.details-product', [
-        'productTransDetails' => $productTransDetails
-    ]);  
+        /*  dd($productTransDetails); */
+        return view('pages.user.transaction.details-product', [
+            'productTransDetails' => $productTransDetails,
+        ]);
     }
-    
 
     /**
      * Show the form for creating a new resource.
@@ -117,8 +113,7 @@ class TransactionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateTransactionRequest $request, $id)
-    {   
-       
+    {
         $data = $request->all();
 
         $item = Transaction::findOrFail($id);
@@ -127,7 +122,7 @@ class TransactionController extends Controller
             return redirect()->route('transaction-details', $id)->with('error', 'Anda sudah mengunggah bukti pembayaran sebelumnya.');
         }
 
-        $data['payment_proof'] = $request->file('payment_proof')->store('payment-proof-users','public');
+        $data['payment_proof'] = $request->file('payment_proof')->store('payment-proof-users', 'public');
 
         $item->update($data);
 
