@@ -10,9 +10,13 @@ class DashboardCashierController extends Controller
 {
     public function index()
     {
+        return view('pages.admin.cashier.index');
+    }
+
+    public function getProduct()
+    {
         $products = Product::with(['category'])->get();
-        return view('pages.admin.cashier.index', [
-            'products' => $products,
-        ]);
+
+        return response()->json(['products' => $products]);
     }
 }

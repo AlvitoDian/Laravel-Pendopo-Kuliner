@@ -13,7 +13,8 @@
 
     {{-- Style --}}
     @include('includes.style')
-
+    @viteReactRefresh
+    @vite('resources/js/app.js')
 
 
 </head>

@@ -40,7 +40,11 @@ Route::post('/register', [RegisterController::class, 'store']);
 
 Route::post('/logout', [LoginController::class, 'logout']);
 
-Route::middleware(['auth', /* 'admin' */'can:isAdmin'])->group(function () {
+/* Route::get('/test-react', function(){
+    return view('welcome');
+}); */
+
+Route::middleware(['auth', /* 'admin' */ 'can:isAdmin'])->group(function () {
     Route::get('/revenue', [DashboardRevenueRecap::class, 'index'])->name('revenue');
 
     Route::get('/revenue/export-excel', [DashboardRevenueRecap::class, 'export_excel'])->name('revenue-export');
@@ -50,8 +54,10 @@ Route::middleware(['auth', /* 'admin' */'can:isAdmin'])->group(function () {
     Route::resource('category-manage', DashboardCategoryController::class);
 
     Route::resource('user-manage', DashboardUserController::class);
-    
+
     Route::resource('cashier-manage', DashboardCashierController::class);
+
+    Route::get('/get-product',[ DashboardCashierController::class, 'getProduct']);
 
     Route::put('/transaction-status/{id}', [App\Http\Controllers\DashboardTransactionAdminController::class, 'update'])->name('transaction-update-status');
 
