@@ -117,6 +117,12 @@
                    <i class="fas fa-fw fa-list"></i>
                    <span>Daftar Kategori Barang</span></a>
            </li>
+           
+           <li class="nav-item">
+               <a class="nav-link" href="{{ route('cashier-manage.index') }}">
+                   <i class="fas fa-fw fa-cash-register"></i>
+                   <span>POS Sistem</span></a>
+           </li>
 
            <li class="nav-item">
                <a class="nav-link" href="{{ route('transaction-admin') }}">

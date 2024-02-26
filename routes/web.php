@@ -15,6 +15,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\DashboardProductController;
 use App\Http\Controllers\DashboardCategoryController;
+use App\Http\Controllers\DashboardCashierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,8 @@ Route::middleware(['auth', /* 'admin' */'can:isAdmin'])->group(function () {
     Route::resource('category-manage', DashboardCategoryController::class);
 
     Route::resource('user-manage', DashboardUserController::class);
+    
+    Route::resource('cashier-manage', DashboardCashierController::class);
 
     Route::put('/transaction-status/{id}', [App\Http\Controllers\DashboardTransactionAdminController::class, 'update'])->name('transaction-update-status');
 
