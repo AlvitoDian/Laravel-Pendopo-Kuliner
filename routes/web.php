@@ -16,6 +16,7 @@ use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\DashboardProductController;
 use App\Http\Controllers\DashboardCategoryController;
 use App\Http\Controllers\DashboardCashierController;
+use App\Http\Controllers\DashboardTransactionAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,8 @@ Route::middleware(['auth', /* 'admin' */ 'can:isAdmin'])->group(function () {
     Route::resource('cashier-manage', DashboardCashierController::class);
 
     Route::get('/get-product',[ DashboardCashierController::class, 'getProduct']);
+   
+    Route::post('/store-product',[ DashboardTransactionAdminController::class, 'store']);
 
     Route::put('/transaction-status/{id}', [App\Http\Controllers\DashboardTransactionAdminController::class, 'update'])->name('transaction-update-status');
 

@@ -15,6 +15,10 @@ function POS() {
         }
     };
 
+    const cancelCart = () => {
+        setCarts((prevCarts) => []);
+    };
+
     const addToCart = (product) => {
         const existingProduct = carts.find(
             (cartItem) => cartItem.id === product.id
@@ -48,6 +52,20 @@ function POS() {
         return carts.reduce((total, cartItem) => total + cartItem.price, 0);
     };
 
+    const sendCart = async () => {
+        console.log(carts);
+        try {
+            await axios.post("/store-product", carts, {
+                headers: {
+                    "Content-type": "application/json",
+                },
+            });
+            console.log("Data has been sent successfully");
+        } catch (error) {
+            console.error("Error sending data:", error);
+        }
+    };
+
     const formatCurrency = (amount) => {
         const formattedAmount = new Intl.NumberFormat("id-ID", {
             style: "currency",
@@ -59,17 +77,20 @@ function POS() {
         return formattedAmount;
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        sendCart();
+    };
+
     useEffect(() => {
         getAllProducts();
     }, []);
-
-    console.log(carts);
 
     return (
         <div className="container-fluid">
             <div className="row">
                 <div className="col-4-lg col-md-4">
-                    <form onSubmit={""}>
+                    <form onSubmit={handleSubmit}>
                         <table className="table">
                             <thead>
                                 <tr>
@@ -94,10 +115,13 @@ function POS() {
                                 </tr>
                             </tbody>
                         </table>
-                        <button type="button" className="btn btn-danger">
+                        <button
+                            onClick={() => cancelCart()}
+                            className="btn btn-danger"
+                        >
                             Batal
                         </button>
-                        <button type="button" className="btn btn-success">
+                        <button type="submit" className="btn btn-success">
                             Kirim
                         </button>
                     </form>
