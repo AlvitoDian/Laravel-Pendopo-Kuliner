@@ -1,6 +1,6 @@
    <!-- Sidebar -->
    <ul class="navbar-nav {{-- bg-gradient-primary --}} sidebar sidebar-dark accordion" id="accordionSidebar"
-       style="background: linear-gradient(to bottom, #f8444f, #ca2d38);
+       style="background-color: #49080C;  border-bottom-right-radius: 10px; border-top-right-radius: 10px;
 ">
 
        <!-- Sidebar - Brand -->
