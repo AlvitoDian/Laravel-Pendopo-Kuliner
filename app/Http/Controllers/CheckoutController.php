@@ -15,6 +15,7 @@ class CheckoutController extends Controller
     public function process(Request $request){
         // Save User Data
         $user = Auth::user();
+        dd($request->all());
       /*   $user->update($request->except('total_price')); */
 
         // Proses Checkout
@@ -36,6 +37,7 @@ class CheckoutController extends Controller
 
         // Foreach Transaction Detail
         foreach ($carts as $cart) {
+    
             $trx = 'STF-' . mt_rand(000000,999999);
 
             $products = Product::with(['category'])->get();

@@ -73,39 +73,47 @@ class DashboardTransactionAdminController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
- 
         $productsData = $request->all();
-        Log::info('Allitem:', $productsData);
-        foreach ($productsData as $item) {
-            Log::info('Processing item:', ['item' => $item]);
+        Log::info('All item:', $productsData);
 
-            Transaction::create([
-                'users_id' => Auth::user()->id,
-                'tax_price' => 0,
-                'total_price' => $item['totalPrice'],
-                'transaction_status' => 'PENDING',
-                'payment_method' => $item['name'],
-                'notes' => 'THIS NOTES',
-                'code' => 'ss2',
-            ]);
+        //? Transaction Create
+        $code = 'TRX-' . mt_rand(000000, 999999);
+        $transaction = Transaction::create([
+            'users_id' => Auth::user()->id,
+            'tax_price' => 0,
+            'total_price' => $request->allProductPrice,
+            'transaction_status' => 'PENDING',
+            'code' => $code,
+            'payment_method' => 'ON CASHIER',
+            'notes' => 'No Notes',
+        ]);
+
+        //? Detail Transaction Create
+        $singProduct = $request->carts;
+        foreach ($singProduct as $item) {
+            Log::info('Single item:', $item);
+            $trx = 'STF-' . mt_rand(000000, 999999);
+
+            $products = Product::with(['category'])->get();
+
+            $quantity = $item['quantity'];
+
+            for ($i = 0; $i < $quantity; $i++) {
+                $product = $products->find($item['product_id']);
+
+                TransactionDetail::create([
+                    'transactions_id' => $transaction->id,
+                    'products_id' => $item['product_id'],
+                    'price' => $product->price,
+                    'delivery_status' => 'PENDING',
+                    'code' => $trx,
+                    'notes' => 'No Notes',
+                    'payment_method' => 'ON CASHIER',
+                ]);
+
+                $product->decrement('quantity');
+            }
         }
-
-        // Proses Checkout
-        // $code = 'TRX-' . mt_rand(000000, 999999);
-        // /*         $carts = Cart::with(['product', 'user'])
-        //     ->where('users_id', Auth::user()->id)
-        //     ->get(); */
-
-        // // Transaction Create
-        // Transaction::create([
-        //     'users_id' => /* Auth::user()->id */ 3,
-        //     'tax_price' => 0,
-        //     'total_price' => 423,
-        //     'transaction_status' => 'PENDING',
-        //     'code' => $code,
-        //     'payment_method' => $request->name,
-        //     'notes' => 'THIS NOTES',
-        // ]);
 
         return response()->json('successfully created');
     }

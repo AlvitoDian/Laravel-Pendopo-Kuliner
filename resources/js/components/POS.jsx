@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 function POS() {
     const [carts, setCarts] = useState([]);
     const [products, setPorudcts] = useState([]);
+    const [sendCarts, setSendCarts] = useState([]);
 
     const getAllProducts = async () => {
         try {
@@ -32,6 +33,7 @@ function POS() {
                               ...cartItem,
                               quantity: cartItem.quantity + 1,
                               price: cartItem.price + product.price,
+                              product_id: product.id,
                           }
                         : cartItem
                 )
@@ -43,6 +45,7 @@ function POS() {
                     ...product,
                     quantity: 1,
                     totalPrice: product.price,
+                    product_id: product.id,
                 },
             ]);
         }
@@ -55,11 +58,14 @@ function POS() {
     const sendCart = async () => {
         console.log(carts);
         try {
-            await axios.post("/store-product", carts, {
+            const totalCartPrice = totalPrice();
+            const dataToSend = { carts, allProductPrice: totalCartPrice };
+            await axios.post("/store-product", dataToSend, {
                 headers: {
                     "Content-type": "application/json",
                 },
             });
+            console.log(dataToSend);
             console.log("Data has been sent successfully");
         } catch (error) {
             console.error("Error sending data:", error);
