@@ -1,23 +1,20 @@
+import { colors } from "laravel-mix/src/Log";
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 
 function POS() {
     const [carts, setCarts] = useState([]);
-    const [products, setPorudcts] = useState([]);
+    const [products, setProducts] = useState([]);
     const [sendCarts, setSendCarts] = useState();
 
     const getAllProducts = async () => {
         try {
             const response = await axios.get("/get-product");
 
-            setPorudcts(response.data.products);
+            setProducts(response.data.products);
         } catch (error) {
             console.error("Error fetching products:", error);
         }
-    };
-
-    const cancelCart = () => {
-        setCarts((prevCarts) => []);
     };
 
     const addToCart = (product) => {
@@ -25,17 +22,28 @@ function POS() {
             (cartItem) => cartItem.id === product.id
         );
 
-        if (existingProduct) {
+        if (existingProduct && product.quantity > 0) {
             setCarts((prevCarts) =>
                 prevCarts.map((cartItem) =>
                     cartItem.id === product.id
                         ? {
                               ...cartItem,
                               quantity: cartItem.quantity + 1,
-                              price: cartItem.price + product.price,
+                              totalPrice: cartItem.totalPrice + product.price,
                               product_id: product.id,
                           }
                         : cartItem
+                )
+            );
+
+            setProducts((prevProducts) =>
+                prevProducts.map((prevProduct) =>
+                    prevProduct.id === product.id
+                        ? {
+                              ...prevProduct,
+                              quantity: prevProduct.quantity - 1,
+                          }
+                        : prevProduct
                 )
             );
         } else {
@@ -44,15 +52,55 @@ function POS() {
                 {
                     ...product,
                     quantity: 1,
-                    totalPrice: product.price,
+                    price: product.price,
                     product_id: product.id,
+                    totalPrice: product.price,
                 },
             ]);
+
+            setProducts((prevProducts) =>
+                prevProducts.map((prevProduct) =>
+                    prevProduct.id === product.id
+                        ? {
+                              ...prevProduct,
+                              quantity: prevProduct.quantity - 1,
+                          }
+                        : prevProduct
+                )
+            );
         }
     };
 
     const totalPrice = () => {
-        return carts.reduce((total, cartItem) => total + cartItem.price, 0);
+        return carts.reduce(
+            (total, cartItem) => total + cartItem.totalPrice,
+            0
+        );
+    };
+
+    const minusProductOnCart = (cart) => {
+        setCarts((prevCarts) =>
+            prevCarts.map((cartItem) =>
+                cartItem.id === cart.id
+                    ? {
+                          ...cartItem,
+                          quantity: cartItem.quantity - 1,
+                          totalPrice: cartItem.totalPrice - cart.price,
+                      }
+                    : cartItem
+            )
+        );
+
+        setProducts((prevProducts) =>
+            prevProducts.map((prevProduct) =>
+                prevProduct.id === cart.id
+                    ? {
+                          ...prevProduct,
+                          quantity: prevProduct.quantity + 1,
+                      }
+                    : prevProduct
+            )
+        );
     };
 
     const sendCart = async () => {
@@ -60,6 +108,7 @@ function POS() {
         try {
             const totalCartPrice = totalPrice();
             const dataToSend = { carts, allProductPrice: totalCartPrice };
+            console.log(dataToSend);
             await axios.post("/store-product", dataToSend, {
                 headers: {
                     "Content-type": "application/json",
@@ -68,22 +117,21 @@ function POS() {
 
             // Tampilkan SweetAlert setelah sukses
             Swal.fire({
-                title: "Success!",
-                text: "Data has been sent successfully",
+                title: "Berhasil!",
+                text: "Data Produk Berhasil Disimpan.",
                 icon: "success",
                 confirmButtonText: "OK",
             });
             setCarts([]);
 
-            console.log(dataToSend);
             console.log("Data has been sent successfully");
         } catch (error) {
             console.error("Error sending data:", error);
 
             // Tampilkan SweetAlert jika terjadi kesalahan
             Swal.fire({
-                title: "Error!",
-                text: "Error sending data. Please try again.",
+                title: "Gagal!",
+                text: "Data Produk Gagal Disimpan. Silakan Coba Lagi Nanti.",
                 icon: "error",
                 confirmButtonText: "OK",
             });
@@ -110,6 +158,8 @@ function POS() {
         getAllProducts();
     }, []);
 
+    console.log(carts);
+
     return (
         <div className="container-fluid">
             <div className="row">
@@ -127,8 +177,36 @@ function POS() {
                                 {carts.map((cart, index) => (
                                     <tr key={index}>
                                         <td>{cart.name}</td>
-                                        <td>{cart.quantity}</td>
-                                        <td>{formatCurrency(cart.price)}</td>
+                                        <td>
+                                            {cart.quantity > 0 ? (
+                                                <a
+                                                    className="btn btn-danger ml-2 btn-sm"
+                                                    onClick={() =>
+                                                        minusProductOnCart(cart)
+                                                    }
+                                                >
+                                                    <i className="fas fa-fw fa-minus"></i>
+                                                </a>
+                                            ) : (
+                                                <></>
+                                            )}
+                                            {cart.quantity}
+                                            {cart.quantity > 0 ? (
+                                                <a
+                                                    className="btn btn-success btn-sm"
+                                                    onClick={() =>
+                                                        minusProductOnCart(cart)
+                                                    }
+                                                >
+                                                    <i className="fas fa-fw fa-plus"></i>
+                                                </a>
+                                            ) : (
+                                                <></>
+                                            )}
+                                        </td>
+                                        <td>
+                                            {formatCurrency(cart.totalPrice)}
+                                        </td>
                                     </tr>
                                 ))}
                                 <tr>
@@ -141,11 +219,11 @@ function POS() {
                         </table>
                         <a
                             onClick={() => cancelCart()}
-                            className="btn btn-danger"
+                            className="btn btn-danger mr-2"
                         >
                             Batal
                         </a>
-                        <button type="submit" className="btn btn-success">
+                        <button type="submit" className="btn btn-success b">
                             Kirim
                         </button>
                     </form>
@@ -156,7 +234,11 @@ function POS() {
                             <div
                                 key={index}
                                 className="card mr-3 mt-3 shadow"
-                                style={{ width: "12rem", borderRadius: 15 }}
+                                style={{
+                                    width: "12rem",
+                                    borderRadius: 15,
+                                    borderBottom: "5px solid #D26728",
+                                }}
                             >
                                 <img
                                     src={`/storage/${product.image}`}
@@ -171,6 +253,12 @@ function POS() {
                                     <h5 className="card-title">
                                         {product.name}
                                     </h5>
+                                    <p
+                                        className="text-info"
+                                        style={{ fontWeight: 400 }}
+                                    >
+                                        Stok : {product.quantity}
+                                    </p>
                                     <h5
                                         className="text-danger"
                                         style={{ fontWeight: 700 }}
@@ -183,12 +271,18 @@ function POS() {
                                     >
                                         {product.category.name}
                                     </p>
-                                    <a
-                                        className="btn btn-primary"
-                                        onClick={() => addToCart(product)}
-                                    >
-                                        Tambah
-                                    </a>
+                                    {product.quantity > 0 ? (
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={() => addToCart(product)}
+                                        >
+                                            Tambah
+                                        </button>
+                                    ) : (
+                                        <span className="text-danger">
+                                            Barang Habis
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         ))}
