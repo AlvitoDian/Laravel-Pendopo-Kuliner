@@ -17,6 +17,10 @@ function POS() {
         }
     };
 
+    const cancelCart = () => {
+        setCarts([]);
+    };
+
     const addToCart = (product) => {
         const existingProduct = carts.find(
             (cartItem) => cartItem.id === product.id
