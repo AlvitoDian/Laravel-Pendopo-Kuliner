@@ -82,7 +82,7 @@ function POS() {
         );
     };
 
-    const minusProductOnCart = (cart) => {
+    /*    const minusProductOnCart = (cart) => {
         setCarts((prevCarts) =>
             prevCarts.map((cartItem) =>
                 cartItem.id === cart.id
@@ -130,7 +130,7 @@ function POS() {
                     : prevProduct
             )
         );
-    };
+    }; */
 
     const sendCart = async () => {
         console.log(carts);
@@ -207,7 +207,7 @@ function POS() {
                                     <tr key={index}>
                                         <td>{cart.name}</td>
                                         <td>
-                                            {cart.quantity > 0 ? (
+                                            {/*   {cart.quantity > 0 ? (
                                                 <a
                                                     className="btn btn-danger mr-2 btn-sm"
                                                     onClick={() =>
@@ -218,9 +218,61 @@ function POS() {
                                                 </a>
                                             ) : (
                                                 <></>
-                                            )}
-                                            {cart.quantity}
-                                            {cart.quantity > 0 ? (
+                                            )} */}
+                                            {/* {cart.quantity} */}
+                                            <input
+                                                type="number"
+                                                className="form-control text-center"
+                                                value={cart.quantity}
+                                                onChange={(e) => {
+                                                    const newQuantity =
+                                                        parseInt(
+                                                            e.target.value,
+                                                            10
+                                                        );
+                                                    if (
+                                                        !isNaN(newQuantity) &&
+                                                        newQuantity >= 0
+                                                    ) {
+                                                        setCarts((prevCarts) =>
+                                                            prevCarts.map(
+                                                                (item) =>
+                                                                    item.id ===
+                                                                    cart.id
+                                                                        ? {
+                                                                              ...item,
+                                                                              quantity:
+                                                                                  newQuantity,
+                                                                              totalPrice:
+                                                                                  newQuantity *
+                                                                                  item.price,
+                                                                          }
+                                                                        : item
+                                                            )
+                                                        );
+                                                        setProducts(
+                                                            (prevProducts) =>
+                                                                prevProducts.map(
+                                                                    (
+                                                                        prevProduct
+                                                                    ) =>
+                                                                        prevProduct.id ===
+                                                                        cart.id
+                                                                            ? {
+                                                                                  ...prevProduct,
+                                                                                  quantity:
+                                                                                      prevProduct.quantity -
+                                                                                      (newQuantity -
+                                                                                          cart.quantity),
+                                                                              }
+                                                                            : prevProduct
+                                                                )
+                                                        );
+                                                    }
+                                                }}
+                                            />
+
+                                            {/*    {cart.quantity > 0 ? (
                                                 <a
                                                     className="btn btn-success btn-sm ml-2"
                                                     onClick={() =>
@@ -231,7 +283,7 @@ function POS() {
                                                 </a>
                                             ) : (
                                                 <></>
-                                            )}
+                                            )} */}
                                         </td>
                                         <td>
                                             {formatCurrency(cart.totalPrice)}
