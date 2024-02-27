@@ -103,6 +103,31 @@ function POS() {
         );
     };
 
+    const plusProductOnCart = (cart) => {
+        setCarts((prevCarts) =>
+            prevCarts.map((cartItem) =>
+                cartItem.id === cart.id
+                    ? {
+                          ...cartItem,
+                          quantity: cartItem.quantity + 1,
+                          totalPrice: cartItem.totalPrice + cart.price,
+                      }
+                    : cartItem
+            )
+        );
+
+        setProducts((prevProducts) =>
+            prevProducts.map((prevProduct) =>
+                prevProduct.id === cart.id
+                    ? {
+                          ...prevProduct,
+                          quantity: prevProduct.quantity - 1,
+                      }
+                    : prevProduct
+            )
+        );
+    };
+
     const sendCart = async () => {
         console.log(carts);
         try {
@@ -180,7 +205,7 @@ function POS() {
                                         <td>
                                             {cart.quantity > 0 ? (
                                                 <a
-                                                    className="btn btn-danger ml-2 btn-sm"
+                                                    className="btn btn-danger mr-2 btn-sm"
                                                     onClick={() =>
                                                         minusProductOnCart(cart)
                                                     }
@@ -193,9 +218,9 @@ function POS() {
                                             {cart.quantity}
                                             {cart.quantity > 0 ? (
                                                 <a
-                                                    className="btn btn-success btn-sm"
+                                                    className="btn btn-success btn-sm ml-2"
                                                     onClick={() =>
-                                                        minusProductOnCart(cart)
+                                                        plusProductOnCart(cart)
                                                     }
                                                 >
                                                     <i className="fas fa-fw fa-plus"></i>
