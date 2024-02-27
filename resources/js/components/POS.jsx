@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 function POS() {
     const [carts, setCarts] = useState([]);
     const [products, setPorudcts] = useState([]);
-    const [sendCarts, setSendCarts] = useState([]);
+    const [sendCarts, setSendCarts] = useState();
 
     const getAllProducts = async () => {
         try {
@@ -65,10 +65,28 @@ function POS() {
                     "Content-type": "application/json",
                 },
             });
+
+            // Tampilkan SweetAlert setelah sukses
+            Swal.fire({
+                title: "Success!",
+                text: "Data has been sent successfully",
+                icon: "success",
+                confirmButtonText: "OK",
+            });
+            setCarts([]);
+
             console.log(dataToSend);
             console.log("Data has been sent successfully");
         } catch (error) {
             console.error("Error sending data:", error);
+
+            // Tampilkan SweetAlert jika terjadi kesalahan
+            Swal.fire({
+                title: "Error!",
+                text: "Error sending data. Please try again.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
         }
     };
 
@@ -121,12 +139,12 @@ function POS() {
                                 </tr>
                             </tbody>
                         </table>
-                        <button
+                        <a
                             onClick={() => cancelCart()}
                             className="btn btn-danger"
                         >
                             Batal
-                        </button>
+                        </a>
                         <button type="submit" className="btn btn-success">
                             Kirim
                         </button>
