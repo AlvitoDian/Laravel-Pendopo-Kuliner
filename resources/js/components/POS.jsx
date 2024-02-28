@@ -252,7 +252,9 @@ function POS() {
 
                                                     if (
                                                         !isNaN(newQuantity) &&
-                                                        newQuantity >= 0
+                                                        newQuantity >= 0 &&
+                                                        newQuantity <=
+                                                            qtyProduct(cart.id)
                                                     ) {
                                                         setCarts((prevCarts) =>
                                                             prevCarts.map(
@@ -290,14 +292,6 @@ function POS() {
                                                                 )
                                                         );
                                                     }
-                                                    /*    console.log(
-                                                        "newQuantity : ",
-                                                        newQuantity
-                                                    );
-                                                    console.log(
-                                                        "qtyProduct : ",
-                                                        qtyProduct
-                                                    ); */
                                                 }}
                                             />
 
