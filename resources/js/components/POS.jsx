@@ -134,6 +134,15 @@ function POS() {
     }; */
 
     const sendCart = async () => {
+        if (carts.length === 0) {
+            Swal.fire({
+                title: "Gagal!",
+                text: "Data Produk yang dikirimkan kosong.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
         console.log(carts);
         try {
             const totalCartPrice = totalPrice();
@@ -241,7 +250,7 @@ function POS() {
                                                     if (
                                                         !isNaN(newQuantity) &&
                                                         newQuantity >= 0 &&
-                                                        qtyProduct - 1 >= 0
+                                                        qtyProduct >= 0
                                                     ) {
                                                         setCarts((prevCarts) =>
                                                             prevCarts.map(
@@ -259,6 +268,7 @@ function POS() {
                                                                         : item
                                                             )
                                                         );
+
                                                         setProducts(
                                                             (prevProducts) =>
                                                                 prevProducts.map(
@@ -278,6 +288,14 @@ function POS() {
                                                                 )
                                                         );
                                                     }
+                                                    console.log(
+                                                        "newQuantity : ",
+                                                        newQuantity
+                                                    );
+                                                    console.log(
+                                                        "qtyProduct : ",
+                                                        qtyProduct
+                                                    );
                                                 }}
                                             />
 
