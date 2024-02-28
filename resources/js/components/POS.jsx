@@ -6,12 +6,14 @@ function POS() {
     const [carts, setCarts] = useState([]);
     const [products, setProducts] = useState([]);
     const [sendCarts, setSendCarts] = useState();
+    const [maxQuantity, setMaxQuantity] = useState();
 
     const getAllProducts = async () => {
         try {
             const response = await axios.get("/get-product");
 
             setProducts(response.data.products);
+            setMaxQuantity(response.data.products);
         } catch (error) {
             console.error("Error fetching products:", error);
         }
@@ -193,6 +195,14 @@ function POS() {
         sendCart();
     };
 
+    const qtyProduct = (cart) => {
+        const productQuantity = maxQuantity.find(
+            (quantity) => quantity.id === cart
+        );
+        const maxQ = productQuantity.quantity;
+        return maxQ;
+    };
+
     useEffect(() => {
         getAllProducts();
     }, []);
@@ -231,6 +241,7 @@ function POS() {
                                             <input
                                                 type="number"
                                                 className="form-control text-center"
+                                                max={qtyProduct(cart.id)}
                                                 value={cart.quantity}
                                                 onChange={(e) => {
                                                     const newQuantity =
@@ -238,19 +249,10 @@ function POS() {
                                                             e.target.value,
                                                             10
                                                         );
-                                                    const productQuantity =
-                                                        products.find(
-                                                            (product) =>
-                                                                product.id ===
-                                                                cart.id
-                                                        );
-                                                    let qtyProduct =
-                                                        productQuantity.quantity;
 
                                                     if (
                                                         !isNaN(newQuantity) &&
-                                                        newQuantity >= 0 &&
-                                                        qtyProduct >= 0
+                                                        newQuantity >= 0
                                                     ) {
                                                         setCarts((prevCarts) =>
                                                             prevCarts.map(
@@ -288,14 +290,14 @@ function POS() {
                                                                 )
                                                         );
                                                     }
-                                                    console.log(
+                                                    /*    console.log(
                                                         "newQuantity : ",
                                                         newQuantity
                                                     );
                                                     console.log(
                                                         "qtyProduct : ",
                                                         qtyProduct
-                                                    );
+                                                    ); */
                                                 }}
                                             />
 
