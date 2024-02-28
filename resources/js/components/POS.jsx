@@ -19,6 +19,7 @@ function POS() {
 
     const cancelCart = () => {
         setCarts([]);
+        getAllProducts();
     };
 
     const addToCart = (product) => {
@@ -187,8 +188,6 @@ function POS() {
         getAllProducts();
     }, []);
 
-    console.log(carts);
-
     return (
         <div className="container-fluid">
             <div className="row">
@@ -230,9 +229,19 @@ function POS() {
                                                             e.target.value,
                                                             10
                                                         );
+                                                    const productQuantity =
+                                                        products.find(
+                                                            (product) =>
+                                                                product.id ===
+                                                                cart.id
+                                                        );
+                                                    let qtyProduct =
+                                                        productQuantity.quantity;
+
                                                     if (
                                                         !isNaN(newQuantity) &&
-                                                        newQuantity >= 0
+                                                        newQuantity >= 0 &&
+                                                        qtyProduct - 1 >= 0
                                                     ) {
                                                         setCarts((prevCarts) =>
                                                             prevCarts.map(
