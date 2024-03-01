@@ -50,25 +50,23 @@
                 <h6 class="dropdown-header">
                     Alerts Center
                 </h6>
-                {{-- @foreach (Auth::user()->notifications as $notification)
-                    <div>
-                        <strong>Produk:</strong> {{ $notification->data['product_name'] }}
-                        <br>
-                        <strong>Harga:</strong> {{ $notification->data['product_price'] }}
-                    </div>
-                @endforeach --}}
                 @foreach (Auth::user()->notifications as $notification)
-                    <a class="dropdown-item d-flex align-items-center" href="#">
+                    <div class="dropdown-item d-flex align-items-center">
                         <div class="mr-3">
-                            <div class="icon-circle bg-primary">
-                                <i class="fas fa-file-alt text-white"></i>
+                            <div class="icon-circle bg-danger">
+                                <i class="fas fa-exclamation text-white"></i>
                             </div>
                         </div>
                         <div>
                             <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
-                            <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                            <span class="font-weight-bold">Barang <span
+                                    class="text-danger">{{ $notification->data['product_name'] }}</span> Telah
+                                Habis</span>
                         </div>
-                    </a>
+                        <a class="mark-as-read" href="#" data-notification-id="{{ $notification->id }}">
+                            <span>Telah Dibaca</span>
+                        </a>
+                    </div>
                 @endforeach
                 {{-- <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a> --}}
             </div>
@@ -79,7 +77,7 @@
             <a class="nav-link dropdown-toggle" href="{{ route('cart') }}">
                 <i class="fas fa-shopping-cart fa-fw"></i>
                 <!-- Counter - Messages -->
-                <span class="badge badge-danger badge-counter">{{ $cartItems ?? '' }}</span>
+                <span class="badge badge-danger badge-counter">{{ $cartItems > 0 ? $cartItems : '' }}</span>
             </a>
         </li>
 
@@ -138,4 +136,25 @@
     </ul>
 
 </nav>
+@push('addon-script')
+    <script>
+        $(document).ready(function() {
+            $('.mark-as-read').on('click', function() {
+                var notificationId = $(this).data('notification-id');
+
+                $.ajax({
+                    url: '/mark-as-read/' + notificationId,
+                    method: 'GET',
+                    success: function(response) {
+                        console.log('Notifikasi telah dibaca');
+                        location.reload();
+                    },
+                    error: function(error) {
+                        console.error('Gagal menandai notifikasi sebagai telah dibaca');
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
 <!-- End of Topbar -->

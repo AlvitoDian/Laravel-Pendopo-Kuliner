@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ProductNotification extends Notification
+class UserTransactionNotification extends Notification
 {
     use Queueable;
 
@@ -16,10 +16,10 @@ class ProductNotification extends Notification
      *
      * @return void
      */
-    protected  $product;
-    public function __construct($product)
+    protected  $user;
+    public function __construct($user)
     {
-        $this->product = $product;
+        $this->user = $user;
     }
 
     /**
@@ -41,7 +41,10 @@ class ProductNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage())->line('The introduction to the notification.')->action('Notification Action', url('/'))->line('Thank you for using our application!');
+        return (new MailMessage)
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -53,8 +56,8 @@ class ProductNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'product_name' => $this->product->name,
-            'category' => 'product_stock'
+            'user_name' => $this->user->name,
+            'category' => 'user_transaction', 
         ];
     }
 }

@@ -155,7 +155,6 @@ function POS() {
                     "Content-type": "application/json",
                 },
             });
-            console.log(response.data);
 
             if (response.data === "Success: Product Successfully Stored") {
                 Swal.fire({
@@ -163,6 +162,9 @@ function POS() {
                     text: "Data Produk Berhasil Disimpan.",
                     icon: "success",
                     confirmButtonText: "OK",
+                    willClose: () => {
+                        window.location.reload();
+                    },
                 });
             } else if (
                 response.data === "Error: Insufficient Product Quantity"

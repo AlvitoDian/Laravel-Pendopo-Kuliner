@@ -170,12 +170,26 @@ class DashboardTransactionAdminController extends Controller
 
             // Commit the transaction
             DB::commit();
-      
+
             return response()->json('Success: Product Successfully Stored');
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json('Error: ' . $e->getMessage());
         }
+    }
+
+    public function marksAsReadProductEmpty($id)
+    {
+        $user = Auth::user();
+        $notification = $user->notifications()->find($id);
+
+        if ($notification) {
+            $notification->markAsRead();
+            $notification->delete(); // Hapus notifikasi yang telah dibaca
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Notifikasi tidak ditemukan']);
     }
 
     /**

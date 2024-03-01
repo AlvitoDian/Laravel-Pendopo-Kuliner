@@ -75,6 +75,8 @@ Route::middleware(['auth', /* 'admin' */ 'can:isAdmin'])->group(function () {
     Route::get('/transaction-details-admin-done/{id}', [App\Http\Controllers\DashboardTransactionAdminController::class, 'detailsDone'])->name('transaction-details-admin-done');
 
     Route::get('/transaction-details-product-admin-done/{id}', [App\Http\Controllers\DashboardTransactionAdminController::class, 'detailProductsDone'])->name('transaction-details-product-admin-done');
+
+    Route::get('/mark-as-read/{id}', [DashboardTransactionAdminController::class, 'marksAsReadProductEmpty'])->name('mark-as-read');
 });
 
 Route::middleware(['auth'])->group(function () {

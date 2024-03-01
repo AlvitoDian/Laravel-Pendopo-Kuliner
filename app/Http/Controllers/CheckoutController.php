@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\UserTransactionNotification;
 
 class CheckoutController extends Controller
 {   
@@ -60,6 +63,10 @@ class CheckoutController extends Controller
             $product->decrement('quantity');
             }
         }
+        
+        $admin = User::where('id', 4)->first();
+
+        Notification::send(User::find($admin), new UserTransactionNotification($user));
 
         // Delete Cart Data
         Cart::where('users_id', Auth::user()->id)->delete();
