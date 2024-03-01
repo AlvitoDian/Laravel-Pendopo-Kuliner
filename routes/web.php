@@ -65,10 +65,16 @@ Route::middleware(['auth', /* 'admin' */ 'can:isAdmin'])->group(function () {
     Route::put('/transaction-status/{id}', [App\Http\Controllers\DashboardTransactionAdminController::class, 'update'])->name('transaction-update-status');
 
     Route::get('/transaction-admin', [App\Http\Controllers\DashboardTransactionAdminController::class, 'index'])->name('transaction-admin');
-
+    
     Route::get('/transaction-details-admin/{id}', [App\Http\Controllers\DashboardTransactionAdminController::class, 'details'])->name('transaction-details-admin');
 
     Route::get('/transaction-details-product-admin/{id}', [App\Http\Controllers\DashboardTransactionAdminController::class, 'detailProducts'])->name('transaction-details-product-admin');
+
+    Route::get('/transaction-admin-done', [App\Http\Controllers\DashboardTransactionAdminController::class, 'indexDone'])->name('transaction-admin-done');
+
+    Route::get('/transaction-details-admin-done/{id}', [App\Http\Controllers\DashboardTransactionAdminController::class, 'detailsDone'])->name('transaction-details-admin-done');
+
+    Route::get('/transaction-details-product-admin-done/{id}', [App\Http\Controllers\DashboardTransactionAdminController::class, 'detailProductsDone'])->name('transaction-details-product-admin-done');
 });
 
 Route::middleware(['auth'])->group(function () {

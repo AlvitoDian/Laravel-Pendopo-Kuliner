@@ -150,26 +150,35 @@ function POS() {
             const totalCartPrice = totalPrice();
             const dataToSend = { carts, allProductPrice: totalCartPrice };
             console.log(dataToSend);
-            await axios.post("/store-product", dataToSend, {
+            const response = await axios.post("/store-product", dataToSend, {
                 headers: {
                     "Content-type": "application/json",
                 },
             });
+            console.log(response.data);
 
-            // Tampilkan SweetAlert setelah sukses
-            Swal.fire({
-                title: "Berhasil!",
-                text: "Data Produk Berhasil Disimpan.",
-                icon: "success",
-                confirmButtonText: "OK",
-            });
+            if (response.data === "Success: Product Successfully Stored") {
+                Swal.fire({
+                    title: "Berhasil!",
+                    text: "Data Produk Berhasil Disimpan.",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                });
+            } else if (
+                response.data === "Error: Insufficient Product Quantity"
+            ) {
+                Swal.fire({
+                    title: "Gagal!",
+                    text: "Terjadi kesalahan saat menyimpan data produk.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
+            }
             setCarts([]);
-
-            console.log("Data has been sent successfully");
+            getAllProducts();
         } catch (error) {
             console.error("Error sending data:", error);
 
-            // Tampilkan SweetAlert jika terjadi kesalahan
             Swal.fire({
                 title: "Gagal!",
                 text: "Data Produk Gagal Disimpan. Silakan Coba Lagi Nanti.",
@@ -241,7 +250,6 @@ function POS() {
                                             <input
                                                 type="number"
                                                 className="form-control text-center"
-                                                max={qtyProduct(cart.id)}
                                                 value={cart.quantity}
                                                 onChange={(e) => {
                                                     const newQuantity =

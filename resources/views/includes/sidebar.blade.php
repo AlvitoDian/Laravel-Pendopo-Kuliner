@@ -129,6 +129,12 @@
                    <i class="fas fa-fw fa-file-invoice"></i>
                    <span>Daftar Transaksi User</span></a>
            </li>
+           
+           <li class="nav-item">
+               <a class="nav-link" href="{{ route('transaction-admin-done') }}">
+                   <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                   <span>Daftar Transaksi Selesai</span></a>
+           </li>
 
            <li class="nav-item">
                <a class="nav-link" href="{{ route('revenue') }}">
