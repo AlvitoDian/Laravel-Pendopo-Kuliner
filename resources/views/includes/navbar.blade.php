@@ -51,22 +51,42 @@
                     Alerts Center
                 </h6>
                 @foreach (Auth::user()->notifications as $notification)
-                    <div class="dropdown-item d-flex align-items-center">
-                        <div class="mr-3">
-                            <div class="icon-circle bg-danger">
-                                <i class="fas fa-exclamation text-white"></i>
+                    @if ($notification->data['category'] === 'user_transaction')
+                        <div class="dropdown-item d-flex align-items-center">
+                            <div class="mr-3">
+                                <div class="icon-circle bg-primary">
+                                    <i class="fas fa-coins text-white"></i>
+                                </div>
                             </div>
+                            <div>
+                                <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
+                                <span class="font-weight-bold"><span
+                                        class="text-success">{{ $notification->data['user_name'] }}</span> Telah
+                                    Melakukan Transaksi</span>
+                            </div>
+                            <a class="mark-as-read" href="#" data-notification-id="{{ $notification->id }}">
+                                <span>Telah Dibaca</span>
+                            </a>
                         </div>
-                        <div>
-                            <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
-                            <span class="font-weight-bold">Barang <span
-                                    class="text-danger">{{ $notification->data['product_name'] }}</span> Telah
-                                Habis</span>
+                    @endif
+                    @if ($notification->data['category'] === 'product_stock')
+                        <div class="dropdown-item d-flex align-items-center">
+                            <div class="mr-3">
+                                <div class="icon-circle bg-danger">
+                                    <i class="fas fa-exclamation text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
+                                <span class="font-weight-bold">Barang <span
+                                        class="text-danger">{{ $notification->data['product_name'] }}</span> Telah
+                                    Habis</span>
+                            </div>
+                            <a class="mark-as-read" href="#" data-notification-id="{{ $notification->id }}">
+                                <span>Telah Dibaca</span>
+                            </a>
                         </div>
-                        <a class="mark-as-read" href="#" data-notification-id="{{ $notification->id }}">
-                            <span>Telah Dibaca</span>
-                        </a>
-                    </div>
+                    @endif
                 @endforeach
                 {{-- <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a> --}}
             </div>
