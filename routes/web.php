@@ -2,6 +2,7 @@
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Events\TestEvent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -11,11 +12,13 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardRevenueRecap;
+use App\Http\Controllers\NotifcationController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DashboardUserController;
+use App\Http\Controllers\DashboardCashierController;
 use App\Http\Controllers\DashboardProductController;
 use App\Http\Controllers\DashboardCategoryController;
-use App\Http\Controllers\DashboardCashierController;
 use App\Http\Controllers\DashboardTransactionAdminController;
 
 /*
@@ -114,4 +117,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaction-details-product/{id}', [App\Http\Controllers\TransactionController::class, 'detailProducts'])->name('transaction-details-product');
 
     Route::put('/transaction-proof/{id}', [App\Http\Controllers\TransactionController::class, 'update'])->name('transaction-proof');
+
+    Route::get("/send-event", function(){
+        broadcast(new TestEvent());
+    });
+
 });

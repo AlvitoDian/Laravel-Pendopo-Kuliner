@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TransactionEvent;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Product;
@@ -66,7 +67,12 @@ class CheckoutController extends Controller
         
         $admin = User::where('id', 4)->first();
 
-        Notification::send(User::find($admin), new UserTransactionNotification($user));
+        //? Send notification to Admin (reload required)
+        /* Notification::send(User::find($admin), new UserTransactionNotification($user)); */
+
+        //? Send broadcast to admin (Laravel Webscoket)
+        broadcast (new TransactionEvent($admin, $user));
+        /* event (new TransactionEvent($admin, $user)); */
 
         // Delete Cart Data
         Cart::where('users_id', Auth::user()->id)->delete();

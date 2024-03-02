@@ -15,6 +15,7 @@
     @include('includes.style')
     @viteReactRefresh
     @vite('resources/js/app.js')
+    @vite('resources/js/bootstrap.js')
 
 
 </head>
@@ -54,6 +55,21 @@
     @include('includes.script')
     @stack('prepend-script')
     @stack('addon-script')
+
+    {{-- //?Admin Broadcoast Handler --}}
+    @php
+        $admin = \App\Models\User::where('roles', 'ADMIN')->first();
+    @endphp
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            Echo.channel('admin.' + {{ $admin->id }})
+                .listen('TransactionEvent', (e) => {
+                    console.log("ini Event", e);
+                });
+        });
+    </script>
+    {{-- //?Admin Broadcoast Handler End --}}
 </body>
 
 </html>
