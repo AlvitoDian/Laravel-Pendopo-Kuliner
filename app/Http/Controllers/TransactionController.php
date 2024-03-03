@@ -22,7 +22,8 @@ class TransactionController extends Controller
     {
         $transactions = Transaction::with('user')
             ->where('users_id', Auth::user()->id)
-            ->get();
+            ->latest()
+            ->paginate(10);
 
         return view('pages.user.transaction.index', [
             'transactions' => $transactions,
@@ -44,9 +45,24 @@ class TransactionController extends Controller
             ->where('transactions_id', $id)
             ->get();
         $transactions = Transaction::with('user')->where('id', $id)->first();
-        /* dd($transactions); */
+
+        $groupedProducts = $transactionProducts->groupBy('product.name');
+
+        $transformedProducts = [];
+
+        foreach ($groupedProducts as $productName => $products) {
+            $quantity = $products->count();
+            $totalPrice = $products->sum('price');
+
+            $transformedProducts[] = [
+                'nama_barang' => $productName,
+                'kuantitas' => $quantity,
+                'harga' => $totalPrice,
+            ];
+        }
+
         return view('pages.user.transaction.details', [
-            'transactionProducts' => $transactionProducts,
+            'transactionProducts' => $transformedProducts,
             'transactions' => $transactions,
         ]);
     }
@@ -117,12 +133,15 @@ class TransactionController extends Controller
         $data = $request->all();
 
         $item = Transaction::findOrFail($id);
+        
 
         if ($item->payment_proof) {
             return redirect()->route('transaction-details', $id)->with('error', 'Anda sudah mengunggah bukti pembayaran sebelumnya.');
         }
 
         $data['payment_proof'] = $request->file('payment_proof')->store('payment-proof-users', 'public');
+
+        $data['transaction_status'] = 'PAYED';
 
         $item->update($data);
 
