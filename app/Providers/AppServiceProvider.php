@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
@@ -29,7 +30,10 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
+    {   
+        //? Pagination
+        Paginator::useBootstrap();
+
         //? Global Formatting Money
         Blade::directive('money', function ($money) {
             return "Rp. <?php echo number_format($money, 0,',','.'); ?>";

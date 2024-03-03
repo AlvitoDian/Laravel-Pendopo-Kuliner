@@ -26,7 +26,7 @@ class DashboardTransactionAdminController extends Controller
 
     public function index()
     {
-        $transactions = Transaction::with('user')->get();
+        $transactions = Transaction::with('user')->latest()->paginate(10);
 
         return view('pages.admin.transaction.index', [
             'transactions' => $transactions,
@@ -49,8 +49,23 @@ class DashboardTransactionAdminController extends Controller
             ->get();
         $transactions = Transaction::with('user')->where('id', $id)->first();
 
+        $groupedProducts = $transactionProducts->groupBy('product.name');
+
+        $transformedProducts = [];
+
+        foreach ($groupedProducts as $productName => $products) {
+            $quantity = $products->count();
+            $totalPrice = $products->sum('price');
+
+            $transformedProducts[] = [
+                'nama_barang' => $productName,
+                'kuantitas' => $quantity,
+                'harga' => $totalPrice,
+            ];
+        }
+
         return view('pages.admin.transaction.details', [
-            'transactionProducts' => $transactionProducts,
+            'transactionProducts' => $transformedProducts,
             'transactions' => $transactions,
         ]);
     }
