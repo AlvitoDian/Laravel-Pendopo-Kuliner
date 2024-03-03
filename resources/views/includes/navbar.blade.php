@@ -41,53 +41,61 @@
                 @php
                     $notificationCount = count(Auth::user()->notifications);
                 @endphp
-                <span
-                    class="badge badge-danger badge-counter">{{ $notificationCount > 0 ? $notificationCount : '' }}</span>
+                @if ($notificationCount > 0)
+                    <span class="badge badge-danger badge-counter" id="notification-count">{{ $notificationCount }}
+                    </span>
+                @else
+                    <span class="" id="notification-count">
+                    </span>
+                @endif
+
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                aria-labelledby="alertsDropdown">
-                <h6 class="dropdown-header">
-                    Alerts Center
-                </h6>
-                @foreach (Auth::user()->notifications as $notification)
-                    @if ($notification->data['category'] === 'user_transaction')
-                        <div class="dropdown-item d-flex align-items-center">
-                            <div class="mr-3">
-                                <div class="icon-circle bg-primary">
-                                    <i class="fas fa-coins text-white"></i>
+                aria-labelledby="alertsDropdown" id="notification">
+                @can('isAdmin')
+                    <h6 class="dropdown-header">
+                        Alerts Center
+                    </h6>
+                    @foreach (Auth::user()->notifications as $notification)
+                        @if ($notification->data['category'] === 'user_transaction')
+                            <div class="dropdown-item d-flex align-items-center">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-coins text-white"></i>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
-                                <span class="font-weight-bold"><span
-                                        class="text-success">{{ $notification->data['user_name'] }}</span> Telah
-                                    Melakukan Transaksi</span>
-                            </div>
-                            <a class="mark-as-read" href="#" data-notification-id="{{ $notification->id }}">
-                                <span>Telah Dibaca</span>
-                            </a>
-                        </div>
-                    @endif
-                    @if ($notification->data['category'] === 'product_stock')
-                        <div class="dropdown-item d-flex align-items-center">
-                            <div class="mr-3">
-                                <div class="icon-circle bg-danger">
-                                    <i class="fas fa-exclamation text-white"></i>
+                                <div>
+                                    <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
+                                    <span class="font-weight-bold"><span
+                                            class="text-success">{{ $notification->data['user_name'] }}</span> Telah
+                                        Melakukan Transaksi</span>
                                 </div>
+                                <a class="mark-as-read" href="#" data-notification-id="{{ $notification->id }}">
+                                    <span>Telah Dibaca</span>
+                                </a>
                             </div>
-                            <div>
-                                <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
-                                <span class="font-weight-bold">Barang <span
-                                        class="text-danger">{{ $notification->data['product_name'] }}</span> Telah
-                                    Habis</span>
+                        @endif
+                        @if ($notification->data['category'] === 'product_stock')
+                            <div class="dropdown-item d-flex align-items-center">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-danger">
+                                        <i class="fas fa-exclamation text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</div>
+                                    <span class="font-weight-bold">Barang <span
+                                            class="text-danger">{{ $notification->data['product_name'] }}</span> Telah
+                                        Habis</span>
+                                </div>
+                                <a class="mark-as-read" href="#" data-notification-id="{{ $notification->id }}">
+                                    <span>Telah Dibaca</span>
+                                </a>
                             </div>
-                            <a class="mark-as-read" href="#" data-notification-id="{{ $notification->id }}">
-                                <span>Telah Dibaca</span>
-                            </a>
-                        </div>
-                    @endif
-                @endforeach
+                        @endif
+                    @endforeach
+                @endcan
                 {{-- <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a> --}}
             </div>
         </li>

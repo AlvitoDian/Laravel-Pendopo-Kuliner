@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Events;
+use Carbon\Carbon;
 
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
@@ -42,7 +43,10 @@ class TransactionEvent implements ShouldBroadcast
     {
         return [
             'user_id' => $this->user->id,
+            'user_name' => $this->user->name,
             'admin' => $this->admin->id,
+            'category' => 'user_transaction',
+            'created_at' => Carbon::now()->toDateTimeString(),
         ];
     }
 

@@ -119,7 +119,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/transaction-proof/{id}', [App\Http\Controllers\TransactionController::class, 'update'])->name('transaction-proof');
 
     Route::get("/send-event", function(){
-        broadcast(new TestEvent());
+        broadcast(new  TestEvent());
     });
 
+    Route::post("/send-notification/{id}", [NotificationController::class, 'userTransaction'])->name('send-notification');
 });
+
+/* Route::get('/token', function () {
+        return csrf_token(); 
+    }); */
